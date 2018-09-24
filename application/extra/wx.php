@@ -7,8 +7,7 @@ return [
 	
 	'app_secret' => 'e2e5c73738070b1e6e42ba0369c87b23',
 
-    'login_url' => "https://api.weixin.qq.com/sns/jscode2session?" .
-        "appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
+    'login_url' => "https://api.weixin.qq.com/sns/jscode2session?"."appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
 
 	'token_expire_in' => 7200,
 ];

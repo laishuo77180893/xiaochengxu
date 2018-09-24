@@ -10,23 +10,27 @@
 // +----------------------------------------------------------------------
 
 
-// use think\Route;
-
-// Route::get('banner/:id', 'api/v1.Banner/getBanner');
-//return [
-//    '__pattern__' => [
-//    'name' => '\w+',
-//],
-//    '[hello]'     => [
-//    ':id'   => ['index/hello', ['method' => 'get'], ['id' => '\d+']],
-//    ':name' => ['index/hello', ['method' => 'post']],
-//],
-//
-//];
-
 use think\Route;
 
-Route::post('api/token/user','api/Token/getToken');
 
+
+Route::get('api/:version/banner','api/:version.banner/getBanner');
+
+Route::get('api/:version/category/all','api/:version.Category/getAllCategory');
+Route::get('api/:version/category/:id','api/:version.Category/getProductByCategory');
+
+Route::get('api/:version/product/recent','api/:version.Product/newProduct');
+Route::get('api/:version/product/by_category','api/:version.Product/getAllProductInCategory');
+Route::get('api/:version/product/:id','api/:version.Product/getProductDetailInfo');
+
+Route::get('api/:version/theme','api/:version.Theme/getSimpleList');
+Route::get('api/:version/theme/:id','api/:version.Theme/getThemeOne');
+
+
+Route::post('api/:version/token/user','api/:version.Token/getToken');
+
+Route::post('api/:version/address','api/:version.Address/createOrUpdateAddress');
+
+Route::post('api/:version/order','api/:version.Order/placeOrder');
 
 

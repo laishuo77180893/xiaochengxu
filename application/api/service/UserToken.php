@@ -6,6 +6,7 @@ use think\Exception;
 use app\api\model\User;
 use app\api\service\BaseToken;
 use app\lib\exception\WeChatException;
+use app\enum\ScopeEnum;
 
 class UserToken extends BaseToken{
 	
@@ -19,7 +20,8 @@ class UserToken extends BaseToken{
 	 	$this->wxAppID = config('wx.app_id');
 	 	$this->wxAppSecret = config('wx.app_secret');
 	 	$this->wxLoginUrl = sprintf(config('wx.login_url'),$this->wxAppID,$this->wxAppSecret,$this->code);
-	 }
+
+	  }
 
 	public function get(){
 
@@ -28,7 +30,7 @@ class UserToken extends BaseToken{
 		$wxResult = json_decode($result,true);//获取微信传递回来的数据，将其转换为数组，加true是变成数组
 
 		if(empty($wxResult)){
-			throw new Exception('发送请求失败失败');
+			throw new Exception('发送请求失败');
 		}else{
 			$loginFail = array_key_exists('errcode', $wxResult);
 			if($loginFail){
@@ -83,7 +85,7 @@ class UserToken extends BaseToken{
 	private function prepareCachedValue($wxResult,$uid){
 		$cacheValue = $wxResult;
 		$cacheValue['uid'] = $uid;
-		$cacheValue['scope'] = 16;//scope(权限身份级别)
+		$cacheValue['scope'] = ScopeEnum::User;//scope(权限身份级别)
 
 		return $cacheValue;
 	}

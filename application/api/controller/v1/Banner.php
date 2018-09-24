@@ -1,32 +1,25 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\v1;
 
 
-use app\api\validate\IDMustBePositiveInt;
+
 use app\lib\exception\BannerException;
-use think\Controller;
 use app\api\model\Banner as BannerModel;
 
-class Banner extends Controller
+class Banner extends BaseController
 {
     
 
     /**
      * 获取指定id的banner信息
-     * @url /banner/:id
+     * @url api/:version/banner
      * @http GET
-     * @id banner的id号
-     *
      */
     public function getBanner()
     {
-        
-        $id = input('get.id');
-        (new IDMustBePositiveInt())->goCheck();
         $banner = new BannerModel();
-        $data = $banner->getBannerByID($id);
-
+        $data = $banner->getBannerInfo();
 
         if(!$data){
             throw new BannerException();

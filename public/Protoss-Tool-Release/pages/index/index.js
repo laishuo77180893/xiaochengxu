@@ -1,7 +1,7 @@
 //index.js
 //获取应用实例
 var app = getApp()
-var baseUrl = 'http://localhost/index.php/api';
+var baseUrl = 'https://localhost/Wechat/public/index.php/api/v1';
 Page({
   onLoad: function () {
   },

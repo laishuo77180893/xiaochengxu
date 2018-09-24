@@ -2,8 +2,7 @@
 
 namespace app\api\model;
 
-use think\Model;
-use app\api\model\BaseModel;
+
 
 class User extends BaseModel{
 	
@@ -18,6 +17,12 @@ class User extends BaseModel{
 		$adduser = self::create(['openid' => $openid]);
 		return $adduser->id;
 	}
+
+	//user表关联UserAddress表
+    public function address(){
+	    return $this->hasOne('UserAddress','user_id','id');
+    }
+
 }
 
 
