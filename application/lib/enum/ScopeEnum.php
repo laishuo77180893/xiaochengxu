@@ -1,6 +1,6 @@
 <?php 
 
-namespace app\api\enum;
+namespace app\lib\enum;
 
 class ScopeEnum{
 	

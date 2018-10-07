@@ -10,7 +10,11 @@ namespace app\api\controller\v1;
 
 
 use app\api\service\BaseToken;
+use app\api\model\Order as OrderModel;
 use app\api\validate\OrderPlaceValidate;
+use app\api\validate\pageParamValidate;
+use think\Collection;
+use think\Request;
 
 
 class Order extends BaseController
@@ -23,15 +27,41 @@ class Order extends BaseController
      *  小程序拿到支付参数后，调用小程序的内置支付api，小程序内置支付api在调用微信支付api
      */
     protected $beforeActionList = [
-        'checkExclusiveScope' => ['only' => 'placeOrder']
+        'checkExclusiveScope' => ['only' => 'placeOrder'],
+        'checkPrimaryScope' => ['only' => 'getSummaryByUser']
     ];
-
+    //下单接口
     public function placeOrder(){
 
-        (new OrderPlaceValidate())->goCheck();
+        (new OrderPlaceValidate())->jsonGoCheck();
 
-        $products = input('post.products/a');
-
+        $products = Request::instance()->put();
         $uid = BaseToken::getCurrentUid();
+        $products = $products['products'];
+
+
+        $order = new \app\api\service\Order();
+        $status = $order->orderCheck($uid,$products);
+        return $status;
+    }
+
+    //订单简要信息分页接口
+    public function getSummaryByUser($page=1,$size=10){
+        (new pageParamValidate())->goCheck();
+        $uid = BaseToken::getCurrentUid();
+        $pageOrder = OrderModel::getSummaryByUser($uid,$page,$size);
+
+        if($pageOrder->isEmpty()){
+            return [
+                'data'=>[],
+                'current_page' => $pageOrder->currentPage()
+            ];
+        }else{
+            return [
+                'data'=> $pageOrder->toArray(),
+                'current_page' => $pageOrder->currentPage()
+            ];
+        }
+
     }
 }

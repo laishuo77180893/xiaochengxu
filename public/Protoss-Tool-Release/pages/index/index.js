@@ -1,7 +1,7 @@
 //index.js
 //获取应用实例
 var app = getApp()
-var baseUrl = 'https://localhost/Wechat/public/index.php/api/v1';
+var baseUrl = 'http://qw.com/api/v1';
 Page({
   onLoad: function () {
   },
@@ -41,6 +41,7 @@ Page({
             code: code
           },
           method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+          header: {'content-type':'application/x-www-form-urlencoded'},// 设置请求的 header
           success: function (res) {
             console.log(res.data);
             wx.setStorageSync('token', res.data.token);
@@ -96,12 +97,12 @@ Page({
         products:
         [
           {
-            product_id: 1, count: 1
+            product_id: 3, count: 2
           },
-          // // },
-          // {
-          //   product_id: 2, count: 1
-          // }
+          // },
+          {
+            product_id: 2, count: 3
+          }
         ]
       },
       method: 'POST',

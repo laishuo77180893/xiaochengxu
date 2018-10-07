@@ -3,7 +3,7 @@
 
 namespace app\api\service;
 
-use app\api\enum\ScopeEnum;
+use app\lib\enum\ScopeEnum;
 use app\lib\exception\ForbiddenException;
 use app\lib\exception\TokenException;
 use think\Cache;
@@ -11,7 +11,7 @@ use think\Exception;
 use think\Request;
 
 class BaseToken{
-	//生成令牌
+	//生成令牌规则
 	public static function getSaveToken(){
 		$str = 'QWERTYUIOPASDFGHJKLZXCVBNM0123456789qwertyuiopasdfghjklzxcvbnm';
 		//获取随机字符串
@@ -58,6 +58,7 @@ class BaseToken{
     //用户和管理员都可以访问的权限接口
     public static function needPrimaryScope(){
         $scope =self::getCurrentTokenVar('scope');
+        //$scope如果不存在说明token令牌无效或者过期
         if($scope){
             if($scope >= ScopeEnum::User){
                 return true;
@@ -72,6 +73,7 @@ class BaseToken{
     //只有用户才能访问的接口权限
     public static function needExclusiveScope(){
         $scope =self::getCurrentTokenVar('scope');
+        //$scope如果不存在说明token令牌无效或者过期
         if($scope){
             if($scope == ScopeEnum::User){
                 return true;
@@ -81,6 +83,18 @@ class BaseToken{
         }else{
             throw new TokenException();
         }
+    }
+
+    //对比检验用户传过来的uid是否与缓存中的uid一致
+    public static function isValidOperate($checkedUID){
+        if(!$checkedUID){
+            throw new Exception('必须传入一个被检测的UID');
+        }
+        $currentOperateUID = self::getCurrentUid();
+        if($currentOperateUID == $checkedUID){
+            return true;
+        }
+        return false;
     }
 
 

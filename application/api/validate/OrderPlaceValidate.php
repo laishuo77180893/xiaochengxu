@@ -12,11 +12,11 @@ use app\lib\exception\ParameterException;
 
 class OrderPlaceValidate extends BaseValidate
 {
-    private $rule = [
+    protected $rule = [
         'products' => 'checkProducts',
     ];
 
-    private $singleRlue = [
+    protected $singleRlue = [
         'product_id' =>'require|isPositiveInteger',
         'count' => 'require|isPositiveInteger'
     ];

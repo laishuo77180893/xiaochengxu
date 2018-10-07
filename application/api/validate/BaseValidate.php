@@ -19,7 +19,6 @@ class BaseValidate extends Validate{
          */
         $request = Request::instance();
         $params = $request->param();
-        
         $result = $this->batch()->check($params);
         if (!$result) {
             $e = new ParameterException([
@@ -31,7 +30,27 @@ class BaseValidate extends Validate{
         }
     }
 
-    /** 正整数验证
+    public function jsonGoCheck()
+    {
+        /**
+         * 获取http传入参数
+         * 对参数进行校验
+         */
+        $request = Request::instance();
+        $params = $request->put();
+        $result = $this->batch()->check($params);
+        if (!$result) {
+            $e = new ParameterException([
+                'msg' => $this->error,
+            ]);
+            throw $e;
+        }else {
+            return true;
+        }
+    }
+
+    /**
+     * 正整数验证
      * @param $value
      * @param string $rule
      * @param string $data
@@ -56,7 +75,7 @@ class BaseValidate extends Validate{
     }
 
     /**
-     * @param array $arrays 通常传入request.post变量数组
+     * @param array $arrays 通常传入request.post表单提交的变量数组
      * @return array 按照规则key过滤后的变量数组
      * @throws ParameterException
      */
@@ -69,6 +88,7 @@ class BaseValidate extends Validate{
             ]);
         }
         $newArray = [];
+        //$newArray数组是用于存放rule指定需要验证字段，其他字段去除
         foreach ($this->rule as $key => $value) {
             $newArray[$key] = $arrays[$key];
         }

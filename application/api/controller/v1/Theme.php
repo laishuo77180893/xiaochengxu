@@ -29,14 +29,14 @@ class Theme extends BaseController{
     /**
      * @url /theme/:id
      * @param string $id
-     *
+     * 获取主题分类商品和对应的顶部图片
      */
     public function getThemeOne($id = ''){
         (new IDMustBePositiveInt())->goCheck();
         $result = ThemeModel::getThemeProductAndHeadImg($id);
         if(!$result){
             throw new ThemeException([
-                'msg' => '获取主题蹄片和商品信息不存在'
+                'msg' => '获取主题图片和商品信息不存在'
             ]);
         }else{
             return show(1,'数据加载成功',$result);

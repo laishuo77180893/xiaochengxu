@@ -2,7 +2,7 @@
 
 namespace app\api\validate;
 
-use app\api\validate\BaseValidate;
+
 
 class TokenValidate extends BaseValidate{
 	protected $rule = [

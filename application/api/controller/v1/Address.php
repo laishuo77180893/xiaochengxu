@@ -15,6 +15,7 @@ use app\api\validate\AddressValidate;
 use app\api\model\User as UserModel;
 use app\lib\exception\SuccessMessage;
 use app\lib\exception\UserException;
+use think\Request;
 
 
 
@@ -25,11 +26,14 @@ class Address extends BaseController
         'checkPrimaryScope' => ['only' =>'createOrUpdateAddress']
     ];
 
-
+    /**
+     * @url api/:version/address
+     * 更新地址信息或者添加用户地址信息
+     */
     public function createOrUpdateAddress(){
 
         $validate = new AddressValidate();
-        $validate->goCheck();
+        $validate->jsonGoCheck();
         /**
          *  根据Token来获取uid
          *  根据uid来查找用户数据，判断用户是否存在，如果不存在抛出异常，
@@ -43,10 +47,11 @@ class Address extends BaseController
             throw new UserException();
         }
 
-        $data = $validate->getDataByRule(input('post.'));//校验数据合法性
+        $params = Request::instance()->put();
+        $data = $validate->getDataByRule($params);//校验数据合法性
 
         $userAddress = $user->address;//获取关联模型数据address是model里面的方法
-        
+
         if(!$userAddress){
             $user->address()->save($data);//保存数据
         }else{

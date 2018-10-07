@@ -4,9 +4,8 @@ namespace app\api\service;
 
 use think\Exception;
 use app\api\model\User;
-use app\api\service\BaseToken;
 use app\lib\exception\WeChatException;
-use app\enum\ScopeEnum;
+use app\lib\enum\ScopeEnum;
 
 class UserToken extends BaseToken{
 	
@@ -24,18 +23,16 @@ class UserToken extends BaseToken{
 	  }
 
 	public function get(){
-
-		$result = curl_get($this->wxLoginUrl);//返回为字符串
-
-		$wxResult = json_decode($result,true);//获取微信传递回来的数据，将其转换为数组，加true是变成数组
-
+        //返回为字符串
+		$result = curl_get($this->wxLoginUrl);
+        //获取微信传递回来的数据，将其转换为数组，加true是变成数组
+		$wxResult = json_decode($result,true);
 		if(empty($wxResult)){
 			throw new Exception('发送请求失败');
 		}else{
 			$loginFail = array_key_exists('errcode', $wxResult);
 			if($loginFail){
-
-				throw new WeChatException(['msg' => $wxResult['errmsg']],['errorCode' => $wxResult['errcode']]);
+			    throw new WeChatException(['msg' => $wxResult['errmsg']],['errorCode' => $wxResult['errcode']]);
 			}else{
 			    //执行成功令牌返回客户端
 				return $this->grantToken($wxResult);
