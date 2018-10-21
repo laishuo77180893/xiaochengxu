@@ -23,7 +23,8 @@ class ExceptionHandler extends Handle
     private $errorCode;
 
     public function render(\Exception $e)
-    {
+    {   
+        //用户操作错误类型
         if ($e instanceof BaseException) {
             //如果是自定义异常，则控制http状态码，不需要记录日志
             //因为这些通常是因为客户端传递参数错误或者是用户请求造成的异常
@@ -32,10 +33,12 @@ class ExceptionHandler extends Handle
             $this->code = $e->code;
             $this->msg = $e->msg;
             $this->errorCode = $e->errorCode;
-        } else {
+        } else {//服务器内部错误
+                //调试模式下服务器内部错误，需要被我们开发人员查看
                 if(config('app_debug')) {
                     return parent::render($e);
                 }else{
+                //生产环境下返回特定的内部错误信息    
                     $this->code = 500;
                     $this->msg = 'sorry，we make a mistake.';
                     $this->errorCode = 999;

@@ -10,6 +10,7 @@ namespace app\api\controller\v1;
 
 
 
+use app\api\model\UserAddress;
 use app\api\service\BaseToken;
 use app\api\validate\AddressValidate;
 use app\api\model\User as UserModel;
@@ -23,8 +24,20 @@ class Address extends BaseController
 {
     //前置方法，在调用createOrUpdateAddress接口之前需要调用checkPrimaryScope接口进行校验
     protected $beforeActionList = [
-        'checkPrimaryScope' => ['only' =>'createOrUpdateAddress']
+        'checkPrimaryScope' => ['only' =>'createOrUpdateAddress,getUserAddress']
     ];
+
+    public function getUserAddress(){
+        $uid = BaseToken::getCurrentUid();
+        $userAddress = UserAddress::where('user_id',$uid)->find();
+        if(!$userAddress){
+            throw new UserException([
+                'msg'=>'用户地址不存在',
+                'errorCode'=>60001
+            ]);
+        }
+        return $userAddress;
+    }
 
     /**
      * @url api/:version/address
@@ -33,7 +46,7 @@ class Address extends BaseController
     public function createOrUpdateAddress(){
 
         $validate = new AddressValidate();
-        $validate->jsonGoCheck();
+        $validate->goCheck();
         /**
          *  根据Token来获取uid
          *  根据uid来查找用户数据，判断用户是否存在，如果不存在抛出异常，
@@ -41,8 +54,8 @@ class Address extends BaseController
          *  根据用户地址信息是否存在，从而判断用户是 添加地址还是更新地址
          */
         $uid = BaseToken::getCurrentUid();//根据Token来获取$uid
-        $user = UserModel::get($uid);  //通过uid查询是否有该用户
-       
+        //通过uid查询是否有该用户
+        $user = UserModel::get($uid);
         if(!$user){
             throw new UserException();
         }
@@ -53,10 +66,19 @@ class Address extends BaseController
         $userAddress = $user->address;//获取关联模型数据address是model里面的方法
 
         if(!$userAddress){
-            $user->address()->save($data);//保存数据
+            /**
+             * 如果还没有关联数据 则进行新增
+             * $user->profile()->save(['email' => 'thinkphp']);
+             */
+            $user->address()->save($data);//新增数据
         }else{
+            /**
+             * 关联更新,和新增一样使用save方法进行更新关联数据
+             * $user->profile->save();
+             */
             $user->address->save($data);//更新数据
         }
         return json(new SuccessMessage(),201);
     }
+
 }

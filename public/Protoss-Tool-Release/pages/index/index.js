@@ -36,12 +36,13 @@ Page({
         console.log('code');
         console.log(code);
         wx.request({
-          url: baseUrl + '/token/user',
+          url: baseUrl + '/token/user?'+code,
           data: {
             code: code
           },
-          method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-          header: {'content-type':'application/x-www-form-urlencoded'},// 设置请求的 header
+          method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+         
+          header: {'content-type':'application/json'},// 设置请求的 header
           success: function (res) {
             console.log(res.data);
             wx.setStorageSync('token', res.data.token);

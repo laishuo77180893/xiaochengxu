@@ -9,7 +9,6 @@ namespace app\api\controller\v1;
 
 
  use app\api\model\Category as CategoryModel;
- use app\api\validate\CategoryValidate;
  use app\lib\exception\CategoryException;
 
  class Category{
@@ -17,26 +16,19 @@ namespace app\api\controller\v1;
       * @url api/:version/category/all
       * 取出商品分类类目和顶部图片
       */
-     public function getAllCategory(){
-         $res = (new CategoryModel())->getCategory();
-         if(!$res){
-             throw new CategoryException();
-         }else{
-             return show(1,'数据返回成功',$res);
+     public function getAllCategories()
+     {
+         $categories = CategoryModel::all([], 'img');
+         if(empty($categories)){
+             throw new CategoryException([
+                 'msg' => '还没有任何类目',
+                 'errorCode' => 50000
+             ]);
          }
+         return $categories;
      }
-     /**
-      * @url api/:version/category/:id
-      * 取出某一分类下的商品信息
-      */
-     public function getProductByCategory($id = ''){
-         (new CategoryValidate())->goCheck();
-         $result = CategoryModel::getProductInfo($id);
-         if(!$result){
-             throw new CategoryException();
-         }else{
-             return show(1,'数据返回成功',$result);
-         }
 
-     }
+
+
+
  }

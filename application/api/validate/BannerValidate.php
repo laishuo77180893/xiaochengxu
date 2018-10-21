@@ -1,7 +1,7 @@
 <?php 
 namespace app\api\validate;
 
-use app\api\validate\BaseValidate;
+
 
 class BannerValidate extends BaseValidate{
 

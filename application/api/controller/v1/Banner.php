@@ -4,8 +4,9 @@ namespace app\api\controller\v1;
 
 
 
-use app\lib\exception\BannerException;
+use app\api\validate\IDMustBePositiveInt;
 use app\api\model\Banner as BannerModel;
+use app\lib\exception\BannerException;
 
 class Banner extends BaseController
 {
@@ -16,16 +17,21 @@ class Banner extends BaseController
      * @url api/:version/banner
      * @http GET
      */
-    public function getBanner()
+    public function getBanner($id)
     {
-        $banner = new BannerModel();
-        $data = $banner->getBannerInfo();
 
-        if(!$data){
-            throw new BannerException();
-        }else{
-            return show(1,'获取数据成功',$data);
+        $validate = new IDMustBePositiveInt();
+        $validate->goCheck();
+        $banner = BannerModel::getBannerById($id);
+//        隐藏模型字段 unset hidden visible
+//        $banner->hidden(['update_time','delete_time']);
+        if (!$banner) {
+            throw new BannerException([
+                'msg' => '请求banner不存在',
+                'errorCode' => 40000
+            ]);
         }
+        return $banner;
 
     }
 

@@ -13,41 +13,29 @@ class BaseValidate extends Validate{
 
     public function goCheck()
     {
-        /**
-         * 获取http传入参数
-         * 对参数进行校验
-         */
+        //必须设置content-type:application/json
+//        获取http传入的参数
         $request = Request::instance();
-        $params = $request->param();
-        $result = $this->batch()->check($params);
-        if (!$result) {
-            $e = new ParameterException([
-                'msg' => $this->error,
-            ]);
-            throw $e;
-        }else {
-            return true;
+        if($request->isGet()) {
+            $params = $request->param();
+            $params['token'] = $request->header('token');
+        }else if($request->isPost()){
+            $params = $request->put();
+            $params['token'] = $request->header('token');
         }
+        if (!$this->batch()->check($params)) {
+            $exception = new ParameterException(
+                [
+                    // $this->error有一个问题，并不是一定返回数组，需要判断
+                    'msg' => is_array($this->error) ? implode(
+                        ';', $this->error) : $this->error,
+                ]);
+            throw $exception;
+        }
+        return true;
     }
 
-    public function jsonGoCheck()
-    {
-        /**
-         * 获取http传入参数
-         * 对参数进行校验
-         */
-        $request = Request::instance();
-        $params = $request->put();
-        $result = $this->batch()->check($params);
-        if (!$result) {
-            $e = new ParameterException([
-                'msg' => $this->error,
-            ]);
-            throw $e;
-        }else {
-            return true;
-        }
-    }
+
 
     /**
      * 正整数验证

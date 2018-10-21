@@ -27,6 +27,8 @@ class Pay extends BaseController
      * 4.生成签名，返回给小程序客户端，拉起微信支付
      * 5.支付完成，微信服务器会自动调用我们一个接收支付结果的api
      */
+
+    //拉起支付api
     public function getPreOrder(){
         (new IDMustBePositiveInt())->jsonGoCheck();
         $id = Request::instance()->put();

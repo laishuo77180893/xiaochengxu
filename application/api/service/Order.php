@@ -28,8 +28,12 @@ class Order
 
     protected $uid;
 
+    function __construct()
+    {
+    }
+
     //检测订单库存和创建订单
-    public function orderCheck($uid,$orderProducts){
+    public function place($uid,$orderProducts){
         $this->orderProducts = $orderProducts;
         //根据订单的商品信息orderProducts去确定products数据库商品信息
         $this->products = $this->getProductsByOrder($orderProducts);

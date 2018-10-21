@@ -14,19 +14,20 @@ use app\api\model\Product as ProductModel;
 use app\api\validate\IDMustBePositiveInt;
 use app\lib\exception\ProductException;
 
+
 class Product extends BaseController{
     /**
-     * 按时间先后顺序取出最新商品（有限制取出商品条数）
+     * 按时间先后顺序取出最新商品（限制取出商品条数）
      * @url api/:version/product/recent
      */
-    public function newProduct(){
-        $count = input('get.count');
+    public function newProduct($count=20){
+
         (new Count())->goCheck();
         $product = ProductModel::getNewProduct($count);
         if(!$product){
             throw new ProductException();
         }else{
-            return show(1,'获取商品信息成功',$product);
+            return $product;
         }
     }
 
@@ -37,10 +38,10 @@ class Product extends BaseController{
     public function getAllProductInCategory($id){
         (new IDMustBePositiveInt())->goCheck();
         $products = ProductModel::getProductByCategoryID($id);
-        if(!$products){
+        if($products->isEmpty()){
             throw new ProductException();
         }else{
-            return show(1,'获取分类商品信息成功',$products);
+            return $products;
         }
     }
 
@@ -54,7 +55,7 @@ class Product extends BaseController{
         if(!$product){
             throw new ProductException();
         }else{
-            return show(1,'获取商品详情成功',$product);
+            return $product;
         }
     }
 

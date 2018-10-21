@@ -17,16 +17,18 @@ class Theme extends BaseModel{
     }
     //关联product表
     public function themeProduct(){
-	    return $this->hasMany('Product','theme_id','id');
+	    //belongsToMany('关联模型名','中间表名','外键名','当前模型关联键名',['模型别名定义']);
+	    return $this->belongsToMany('Product','theme_product',
+            'product_id','theme_id');
     }
     //查询主题theme下对应的图片
     public static function getTopicImg($ids){
-	    return self::with('topicImg')->select($ids);
+	    return self::with('topicImg,headImg')->select($ids);
     }
 
     //查询主题theme下对应的图片和商品
     public static function getThemeProductAndHeadImg($id){
-	    return self::with('headImg,themeProduct')->select($id);
+	    return self::with('headImg,themeProduct')->find($id);
     }
 
 

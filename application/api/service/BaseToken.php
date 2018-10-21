@@ -97,6 +97,16 @@ class BaseToken{
         return false;
     }
 
+    //读取缓存中token的值，进行token令牌校验
+    public static function verifyToken($token=''){
+	    $param = Cache::get($token);
+	    if(!$param){
+	        return false;
+        }else{
+	        return true;
+        }
+    }
+
 
 
 }

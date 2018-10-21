@@ -155,7 +155,7 @@ INSERT INTO `image` VALUES ('69', '/product-vg@3.png', '1', null, null);
 DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_no` varchar(20) NOT NULL COMMENT '订单号',
+  `order_sn` varchar(20) NOT NULL COMMENT '订单号',
   `user_id` int(11) NOT NULL COMMENT '外键，用户id，注意并不是openid',
   `delete_time` int(11) DEFAULT NULL,
   `create_time` int(11) DEFAULT NULL,
@@ -169,7 +169,7 @@ CREATE TABLE `order` (
   `snap_address` varchar(500) DEFAULT NULL COMMENT '地址快照',
   `prepay_id` varchar(100) DEFAULT NULL COMMENT '订单微信支付的预订单id（用于发送模板消息）',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `order_no` (`order_no`),
+  UNIQUE KEY `order_sn` (`order_sn`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=539 DEFAULT CHARSET=utf8mb4;
 
@@ -423,3 +423,36 @@ CREATE TABLE `user_address` (
 -- ----------------------------
 -- Records of user_address
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for user_cart
+-- ----------------------------
+
+DROP TABLE IF EXISTS `user_cart`;
+CREATE TABLE `user_cart` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) NOT NULL COMMENT '商品id',
+  `count` int(11) NOT NULL DEFAULT '0' COMMENT '商品数量',
+  `product_price` decimal(10,2) NOT NULL DEFAULT '0' COMMENT '总价格',
+  `user_id` int(11) NOT NULL COMMENT '外键',
+  `create_time` int(11) DEFAULT NULL,
+  `update_time` int(11) DEFAULT NULL,
+  `delete_time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `login`;
+CREATE TABLE `login` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL COMMENT '用户名',
+  `password` varchar(50) NOT NULL COMMENT '密码',
+  `detail` varchar(255) NOT NULL DEFAULT '' COMMENT '个人详情',
+  `email` varchar(50) NOT NULL DEFAULT ''COMMENT'',
+  `profession` varchar(12) NOT NULL COMMENT '',
+  `delete_time` int(11) DEFAULT NULL,
+  `create_time` int(11) DEFAULT NULL COMMENT '注册时间',
+  `update_time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4;

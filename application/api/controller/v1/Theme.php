@@ -19,10 +19,10 @@ class Theme extends BaseController{
         (new ThemeValidate())->goCheck();
         $ids =explode(',',$ids);
         $result = ThemeModel::getTopicImg($ids);
-        if(!$result){
+        if($result->isEmpty()){
             throw new ThemeException();
         }else{
-            return show(1,'数据返回成功',$result);
+            return $result;
         }
     }
 
@@ -39,7 +39,7 @@ class Theme extends BaseController{
                 'msg' => '获取主题图片和商品信息不存在'
             ]);
         }else{
-            return show(1,'数据加载成功',$result);
+            return $result;
         }
     }
 

@@ -82,7 +82,7 @@ class Pay
         }
         //请求成功后更新数据库订单表中prepay_id的值
         $this->recordPreOrder($wxOrder);
-        //生成签名向小程序客户端返回签名
+        //返回客户端参数，客户端接收到参数去调用微信支付接口，拉起微信支付
         return $this->sign($wxOrder);
     }
 
@@ -91,7 +91,7 @@ class Pay
         OrderModel::where('id','=',$this->orderID)->update(['prepay_id'=>$wxOrder['prepay_id']]);
     }
 
-    //生成签名
+    //返回客户端参数，客户端接收到参数去调用微信支付接口，拉起微信支付
     private function sign($wxOrder){
         $jsApiPayData = new \WxPayJsApiPay();
         $jsApiPayData->SetAppid(config('wx.app_id'));
@@ -100,7 +100,7 @@ class Pay
         $jsApiPayData->SetPackage('prepay_id='.$wxOrder['prepay_id']);
         $jsApiPayData->SetSignType('md5');
         $jsApiPayData->SetTimeStamp((string)time());
-        //$sign签名
+        //$sign生成签名
         $sign = $jsApiPayData->MakeSign();
         $rawValues = $jsApiPayData->GetValues();
         $rawValues['sign'] = $sign;

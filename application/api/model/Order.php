@@ -29,10 +29,11 @@ class Order extends BaseModel
         return json_decode($value);
     }
 
-    public static function getSummaryByUser($uid,$page=1,$size=10){
-        $pageData = self::where('user_id','=',$uid)
+    public static function getSummaryByUser($uid,$page=1,$size=5){
+
+        $pageData = self::where('user_id', '=', $uid)
             ->order('create_time desc')
-            ->paginate($size,true,['page' => $page]);
+            ->paginate($size, true, ['page' => $page]);
         return $pageData;
     }
 }
